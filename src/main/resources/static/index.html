@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TurnoFlex · Panel operativo</title>
+    <style>
+  :root{
+    --bg: #F7F7F4;
+    --panel: #FFFFFF;
+    --ink: #1C2B2A;
+    --muted: #5B6664;
+    --line: #DEDBD2;
+    --teal: #2F6F62;
+    --teal-dark: #234F45;
+    --amber: #C97A3D;
+    --green: #3F7D53;
+    --red: #B4483B;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding: 18px 32px;
+    border-bottom: 1px solid var(--line);
+    background: var(--panel);
+  }
+  .brand{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+  }
+  .brand .mark{
+    font-weight:700;
+    font-size:20px;
+    letter-spacing:-0.01em;
+  }
+  .brand .tag{
+    color:var(--muted);
+    font-size:13px;
+  }
+  .session{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    font-size:14px;
+  }
+  .session .who{ color:var(--muted); }
+  .session .role{
+    border:1px solid var(--teal);
+    color:var(--teal-dark);
+    padding:3px 9px;
+    font-size:12px;
+    font-weight:600;
+  }
+  .linklike{
+    background:none;
+    border:none;
+    color:var(--muted);
+    text-decoration:underline;
+    cursor:pointer;
+    font-size:14px;
+    padding:0;
+  }
+  .linklike:hover{ color:var(--ink); }
+
+  /* ---- Login ---- */
+  .login-wrap{
+    min-height: calc(100vh - 64px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 24px;
+  }
+  .login-card{
+    width:100%;
+    max-width:360px;
+  }
+  .login-card h1{
+    font-size:22px;
+    margin:0 0 4px;
+    letter-spacing:-0.01em;
+  }
+  .login-card p.lead{
+    color:var(--muted);
+    margin:0 0 28px;
+    font-size:14px;
+  }
+  label{
+    display:block;
+    font-size:13px;
+    color:var(--muted);
+    margin-bottom:6px;
+  }
+  input[type=email], input[type=password]{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid var(--line);
+    background:var(--panel);
+    font-size:15px;
+    color:var(--ink);
+    margin-bottom:18px;
+  }
+  input:focus{
+    outline:2px solid var(--teal);
+    outline-offset:1px;
+    border-color:var(--teal);
+  }
+  button.primary{
+    width:100%;
+    padding:11px;
+    background:var(--teal);
+    color:#fff;
+    border:none;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+  }
+  button.primary:hover{ background:var(--teal-dark); }
+  button.primary:disabled{ background:#9DB6AE; cursor:default; }
+
+  .msg{
+    margin-top:14px;
+    font-size:13px;
+    padding:10px 12px;
+    border-left:3px solid var(--red);
+    background:#FBEEEC;
+    color:var(--red);
+    display:none;
+  }
+  .msg.show{ display:block; }
+
+  .hint{
+    margin-top:22px;
+    font-size:12px;
+    color:var(--muted);
+    line-height:1.5;
+    border-top:1px solid var(--line);
+    padding-top:14px;
+  }
+
+  /* ---- Dashboard ---- */
+  .dash{
+    display:none;
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 32px;
+  }
+  .dash.show{ display:block; }
+
+  .greeting{
+    font-size:22px;
+    margin:0 0 4px;
+    letter-spacing:-0.01em;
+  }
+  .greeting-sub{
+    color:var(--muted);
+    font-size:14px;
+    margin:0 0 32px;
+  }
+
+  .panels{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+  }
+  @media (max-width: 760px){
+    .panels{ grid-template-columns: 1fr; }
+  }
+
+  .panel h2{
+    font-size:15px;
+    text-transform:none;
+    margin:0 0 2px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .panel h2 .refresh{
+    font-size:12px;
+    font-weight:400;
+  }
+  .panel .count{
+    color:var(--muted);
+    font-size:13px;
+    margin:0 0 14px;
+  }
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:14px;
+  }
+  thead th{
+    text-align:left;
+    font-weight:600;
+    color:var(--muted);
+    font-size:12px;
+    border-bottom:1px solid var(--line);
+    padding:0 8px 8px 0;
+  }
+  tbody td{
+    padding:10px 8px 10px 0;
+    border-bottom:1px solid var(--line);
+    vertical-align:top;
+  }
+  tbody tr:last-child td{ border-bottom:none; }
+
+  .tag{
+    font-size:11px;
+    font-weight:700;
+    padding:2px 7px;
+    border:1px solid currentColor;
+    white-space:nowrap;
+  }
+  .tag.PROGRAMADO, .tag.PENDIENTE{ color:var(--amber); }
+  .tag.APROBADA, .tag.COMPLETADO{ color:var(--green); }
+  .tag.RECHAZADA, .tag.CANCELADO{ color:var(--red); }
+  .tag.MODIFICADO{ color:var(--teal-dark); }
+
+  .empty, .loading, .error{
+    color:var(--muted);
+    font-size:13px;
+    padding: 12px 0;
+  }
+  .error{ color:var(--red); }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+    <div class="brand">
+        <span class="mark">TurnoFlex</span>
+        <span class="tag">Panel operativo</span>
+    </div>
+    <div class="session" id="sessionBar" style="display:none;">
+        <span class="who" id="whoText"></span>
+        <span class="role" id="roleTag"></span>
+        <button class="linklike" id="logoutBtn">Cerrar sesión</button>
+    </div>
+</div>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="loginView">
+    <div class="login-card">
+        <h1>Inicia sesión</h1>
+        <p class="lead">Consulta la programación de turnos y el estado de las novedades.</p>
+
+        <form id="loginForm">
+            <label for="email">Correo electrónico</label>
+            <input type="email" id="email" required value="coordinador@turnoflex.com" />
+
+            <label for="password">Contraseña</label>
+            <input type="password" id="password" required value="1234" />
+
+            <button type="submit" class="primary" id="loginBtn">Entrar</button>
+        </form>
+
+        <div class="msg" id="loginMsg"></div>
+
+        <div class="hint">
+            Este panel consume la API REST de TurnoFlex (Spring Boot) directamente:
+            <code>/api/auth/login</code>, <code>/api/turnos</code> y <code>/api/novedades</code>.
+        </div>
+    </div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="dash" id="dashView">
+    <h1 class="greeting" id="greetingText">Hola</h1>
+    <p class="greeting-sub">Esto es lo que hay registrado en el sistema en este momento.</p>
+
+    <div class="panels">
+        <div class="panel">
+            <h2>Turnos <button class="linklike refresh" onclick="cargarTurnos()">Actualizar</button></h2>
+            <p class="count" id="turnosCount">—</p>
+            <div id="turnosBox"><p class="loading">Cargando…</p></div>
+        </div>
+
+        <div class="panel">
+            <h2>Novedades <button class="linklike refresh" onclick="cargarNovedades()">Actualizar</button></h2>
+            <p class="count" id="novedadesCount">—</p>
+            <div id="novedadesBox"><p class="loading">Cargando…</p></div>
+        </div>
+    </div>
+</div>
+
+<script>
+  const API = ""; // mismo origen: Spring Boot sirve este archivo y la API
+  let sesion = null;
+
+  const loginView = document.getElementById("loginView");
+  const dashView = document.getElementById("dashView");
+  const sessionBar = document.getElementById("sessionBar");
+  const loginMsg = document.getElementById("loginMsg");
+  const loginBtn = document.getElementById("loginBtn");
+
+  document.getElementById("loginForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+
+    loginMsg.classList.remove("show");
+    loginBtn.disabled = true;
+    loginBtn.textContent = "Entrando…";
+
+    try {
+      const res = await fetch(`${API}/api/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "No se pudo iniciar sesión.");
+      }
+
+      sesion = data; // { token, email, rol, nombre }
+      sessionStorage.setItem("turnoflex_sesion", JSON.stringify(sesion));
+      mostrarDashboard();
+    } catch (err) {
+      loginMsg.textContent = err.message || "Credenciales incorrectas.";
+      loginMsg.classList.add("show");
+    } finally {
+      loginBtn.disabled = false;
+      loginBtn.textContent = "Entrar";
+    }
+  });
+
+  document.getElementById("logoutBtn").addEventListener("click", () => {
+    sesion = null;
+    sessionStorage.removeItem("turnoflex_sesion");
+    dashView.classList.remove("show");
+    sessionBar.style.display = "none";
+    loginView.style.display = "flex";
+  });
+
+  function mostrarDashboard() {
+    loginView.style.display = "none";
+    dashView.classList.add("show");
+    sessionBar.style.display = "flex";
+    document.getElementById("whoText").textContent = sesion.nombre;
+    document.getElementById("roleTag").textContent = sesion.rol;
+    document.getElementById("greetingText").textContent = `Hola, ${sesion.nombre.split(" ")[0]}`;
+    cargarTurnos();
+    cargarNovedades();
+  }
+
+  function authHeaders() {
+    return sesion ? { Authorization: `Bearer ${sesion.token}` } : {};
+  }
+
+  async function cargarTurnos() {
+    const box = document.getElementById("turnosBox");
+    const count = document.getElementById("turnosCount");
+    box.innerHTML = `<p class="loading">Cargando…</p>`;
+    try {
+      const res = await fetch(`${API}/api/turnos`, { headers: authHeaders() });
+      const turnos = await res.json();
+      count.textContent = `${turnos.length} registrado(s)`;
+      if (!turnos.length) {
+        box.innerHTML = `<p class="empty">Todavía no hay turnos programados.</p>`;
+        return;
+      }
+      box.innerHTML = renderTabla(
+        ["Fecha", "Horario", "Empleado", "Estado"],
+        turnos.map((t) => [
+          t.fecha,
+          `${t.horaInicio?.slice(0,5)} – ${t.horaFin?.slice(0,5)}`,
+          `#${t.idEmpleado}`,
+          tag(t.estado),
+        ])
+      );
+    } catch (e) {
+      box.innerHTML = `<p class="error">No se pudo conectar con /api/turnos.</p>`;
+    }
+  }
+
+  async function cargarNovedades() {
+    const box = document.getElementById("novedadesBox");
+    const count = document.getElementById("novedadesCount");
+    box.innerHTML = `<p class="loading">Cargando…</p>`;
+    try {
+      const res = await fetch(`${API}/api/novedades`, { headers: authHeaders() });
+      const novedades = await res.json();
+      count.textContent = `${novedades.length} registrada(s)`;
+      if (!novedades.length) {
+        box.innerHTML = `<p class="empty">No hay novedades registradas.</p>`;
+        return;
+      }
+      box.innerHTML = renderTabla(
+        ["Tipo", "Periodo", "Empleado", "Estado"],
+        novedades.map((n) => [
+          n.tipo,
+          `${n.fechaInicio} → ${n.fechaFin}`,
+          `#${n.idEmpleado}`,
+          tag(n.estado),
+        ])
+      );
+    } catch (e) {
+      box.innerHTML = `<p class="error">No se pudo conectar con /api/novedades.</p>`;
+    }
+  }
+
+  function tag(estado) {
+    return `<span class="tag ${estado}">${estado}</span>`;
+  }
+
+  function renderTabla(headers, rows) {
+    return `
+      <table>
+        <thead><tr>${headers.map((h) => `<th>${h}</th>`).join("")}</tr></thead>
+        <tbody>
+          ${rows
+            .map((r) => `<tr>${r.map((c) => `<td>${c}</td>`).join("")}</tr>`)
+            .join("")}
+        </tbody>
+      </table>`;
+  }
+
+  // Restaurar sesión si ya había una activa en esta pestaña
+  const guardada = sessionStorage.getItem("turnoflex_sesion");
+  if (guardada) {
+    sesion = JSON.parse(guardada);
+    mostrarDashboard();
+  }
+</script>
+
+</body>
+</html>
