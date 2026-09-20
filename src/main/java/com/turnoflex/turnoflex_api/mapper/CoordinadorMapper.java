@@ -7,6 +7,9 @@ import java.util.List;
 @Mapper
 public interface CoordinadorMapper {
 
+
+    @Select("SELECT id, id_usuario AS idUsuario, area_asignada AS areaAsignada FROM coordinadores WHERE id_usuario = #{idUsuario}")
+    Coordinador obtenerCoordinadorPorIdUsuario(Integer idUsuario);
     @Select("SELECT id, id_usuario AS idUsuario, area_asignada AS areaAsignada FROM coordinadores")
     List<Coordinador> obtenerCoordinadores();
 

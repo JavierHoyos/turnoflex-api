@@ -1,7 +1,9 @@
 package com.turnoflex.turnoflex_api.controller;
 
 import com.turnoflex.turnoflex_api.config.JwtUtil;
+import com.turnoflex.turnoflex_api.mapper.CoordinadorMapper;
 import com.turnoflex.turnoflex_api.mapper.UsuarioMapper;
+import com.turnoflex.turnoflex_api.model.Coordinador;
 import com.turnoflex.turnoflex_api.model.LoginRequest;
 import com.turnoflex.turnoflex_api.model.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,9 @@ public class AuthController {
 
     @Autowired
     private UsuarioMapper usuarioMapper;
+
+    @Autowired
+    private CoordinadorMapper coordinadorMapper;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -48,12 +53,18 @@ public class AuthController {
 
         Map<String, Object> respuesta = new HashMap<>();
         respuesta.put("token", token);
+        respuesta.put("id", usuario.getId());
         respuesta.put("email", usuario.getEmail());
         respuesta.put("rol", usuario.getRol());
         respuesta.put("nombre", usuario.getNombre());
 
+        if ("COORDINADOR".equals(usuario.getRol())) {
+            Coordinador coordinador = coordinadorMapper.obtenerCoordinadorPorIdUsuario(usuario.getId());
+            if (coordinador != null) {
+                respuesta.put("idCoordinador", coordinador.getId());
+            }
+        }
+
         return ResponseEntity.ok(respuesta);
     }
-
-
 }
