@@ -26,6 +26,16 @@ public class JwtUtil {
                 .compact();
     }
 
+
+    public String extraerRol(String token) {
+        return (String) Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("rol");
+    }
+
     public String extraerEmail(String token) {
         return Jwts.parser()
                 .verifyWith(secretKey)
