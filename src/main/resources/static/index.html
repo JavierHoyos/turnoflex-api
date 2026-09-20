@@ -159,7 +159,7 @@
     </div>
 
     <div class="forms">
-        <div class="panel form-panel">
+        <div class="panel form-panel" id="turnoFormPanel">
             <h2>Registrar turno</h2>
             <form id="turnoForm">
                 <label for="t_idEmpleado">ID del empleado</label>
@@ -271,6 +271,10 @@
     document.getElementById("whoText").textContent = sesion.nombre;
     document.getElementById("roleTag").textContent = sesion.rol;
     document.getElementById("greetingText").textContent = `Hola, ${sesion.nombre.split(" ")[0]}`;
+
+    const esEmpleado = sesion.rol === "EMPLEADO";
+    document.getElementById("turnoFormPanel").style.display = esEmpleado ? "none" : "";
+
     cargarTurnos();
     cargarNovedades();
   }
@@ -291,7 +295,8 @@
     const count = document.getElementById("turnosCount");
     box.innerHTML = `<p class="loading">Cargando…</p>`;
     try {
-      const res = await fetch(`${API}/api/turnos`, { headers: authHeaders() });
+      const query = sesion.rol === "EMPLEADO" && sesion.idEmpleado ? `?idEmpleado=${sesion.idEmpleado}` : "";
+      const res = await fetch(`${API}/api/turnos${query}`, { headers: authHeaders() });
       const turnos = await res.json();
       count.textContent = `${turnos.length} registrado(s)`;
       if (!turnos.length) {
@@ -340,7 +345,8 @@
     const count = document.getElementById("novedadesCount");
     box.innerHTML = `<p class="loading">Cargando…</p>`;
     try {
-      const res = await fetch(`${API}/api/novedades`, { headers: authHeaders() });
+      const query = sesion.rol === "EMPLEADO" && sesion.idEmpleado ? `?idEmpleado=${sesion.idEmpleado}` : "";
+      const res = await fetch(`${API}/api/novedades${query}`, { headers: authHeaders() });
       const novedades = await res.json();
       count.textContent = `${novedades.length} registrada(s)`;
       if (!novedades.length) {

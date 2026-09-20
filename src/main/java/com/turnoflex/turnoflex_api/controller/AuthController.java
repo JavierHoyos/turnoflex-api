@@ -2,6 +2,7 @@ package com.turnoflex.turnoflex_api.controller;
 
 import com.turnoflex.turnoflex_api.config.JwtUtil;
 import com.turnoflex.turnoflex_api.mapper.CoordinadorMapper;
+import com.turnoflex.turnoflex_api.mapper.EmpleadoMapper;
 import com.turnoflex.turnoflex_api.mapper.UsuarioMapper;
 import com.turnoflex.turnoflex_api.model.Coordinador;
 import com.turnoflex.turnoflex_api.model.LoginRequest;
@@ -24,6 +25,9 @@ public class AuthController {
 
     @Autowired
     private CoordinadorMapper coordinadorMapper;
+
+    @Autowired
+    private EmpleadoMapper empleadoMapper;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -62,6 +66,13 @@ public class AuthController {
             Coordinador coordinador = coordinadorMapper.obtenerCoordinadorPorIdUsuario(usuario.getId());
             if (coordinador != null) {
                 respuesta.put("idCoordinador", coordinador.getId());
+            }
+        }
+
+        if ("EMPLEADO".equals(usuario.getRol())) {
+            Integer idEmpleado = empleadoMapper.obtenerIdEmpleadoPorIdUsuario(usuario.getId());
+            if (idEmpleado != null) {
+                respuesta.put("idEmpleado", idEmpleado);
             }
         }
 

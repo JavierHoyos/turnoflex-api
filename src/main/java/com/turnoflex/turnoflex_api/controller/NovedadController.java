@@ -14,7 +14,10 @@ public class NovedadController {
     private NovedadMapper novedadMapper;
 
     @GetMapping
-    public List<Novedad> listar() {
+    public List<Novedad> listar(@RequestParam(required = false) Integer idEmpleado) {
+        if (idEmpleado != null) {
+            return novedadMapper.obtenerNovedadesPorEmpleado(idEmpleado);
+        }
         return novedadMapper.obtenerNovedades();
     }
 

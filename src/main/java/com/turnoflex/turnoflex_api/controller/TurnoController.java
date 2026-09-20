@@ -14,9 +14,13 @@ public class TurnoController {
     private TurnoMapper turnoMapper;
 
     @GetMapping
-    public List<Turno> listar() {
+    public List<Turno> listar(@RequestParam(required = false) Integer idEmpleado) {
+        if (idEmpleado != null) {
+            return turnoMapper.obtenerTurnosPorEmpleado(idEmpleado);
+        }
         return turnoMapper.obtenerTurnos();
     }
+
 
     @GetMapping("/{id}")
     public Turno obtenerPorId(@PathVariable Integer id) {

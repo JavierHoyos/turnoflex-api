@@ -9,6 +9,10 @@ public interface NovedadMapper {
 
     @Select("SELECT id, id_empleado AS idEmpleado, tipo, fecha_inicio AS fechaInicio, " +
             "fecha_fin AS fechaFin, estado, id_coordinador_aprueba AS idCoordinadorAprueba, observacion " +
+            "FROM novedades WHERE id_empleado = #{idEmpleado}")
+    List<Novedad> obtenerNovedadesPorEmpleado(Integer idEmpleado);
+    @Select("SELECT id, id_empleado AS idEmpleado, tipo, fecha_inicio AS fechaInicio, " +
+            "fecha_fin AS fechaFin, estado, id_coordinador_aprueba AS idCoordinadorAprueba, observacion " +
             "FROM novedades")
     List<Novedad> obtenerNovedades();
 

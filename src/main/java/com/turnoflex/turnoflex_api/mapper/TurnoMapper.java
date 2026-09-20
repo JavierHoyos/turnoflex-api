@@ -7,6 +7,11 @@ import java.util.List;
 @Mapper
 public interface TurnoMapper {
 
+
+    @Select("SELECT id, id_empleado AS idEmpleado, fecha, hora_inicio AS horaInicio, " +
+            "hora_fin AS horaFin, estado FROM turnos WHERE id_empleado = #{idEmpleado}")
+    List<Turno> obtenerTurnosPorEmpleado(Integer idEmpleado);
+
     @Select("SELECT id, id_empleado AS idEmpleado, fecha, hora_inicio AS horaInicio, " +
             "hora_fin AS horaFin, estado FROM turnos")
     List<Turno> obtenerTurnos();
