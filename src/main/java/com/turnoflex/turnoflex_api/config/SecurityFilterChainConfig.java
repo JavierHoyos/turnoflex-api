@@ -27,6 +27,9 @@ public class SecurityFilterChainConfig {
                         .requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers("/", "/index.html", "/*.css", "/*.js").permitAll()
 
+
+                        .requestMatchers("/api/reportes/**").hasRole("COORDINADOR")
+
                         // Solo COORDINADOR puede aprobar/rechazar novedades
                         .requestMatchers(HttpMethod.PUT, "/api/novedades/*/estado").hasRole("COORDINADOR")
 
